@@ -14,11 +14,13 @@ import java.util.List;
 
 public class Server {
 	
+	// products database variables
 	private List<String> fileContent;
 	private List<String> items;
 	private List<Integer> quantities;
 	private List<Double> prices;
 
+	// user info database variables
 	private Random rand;
 	private List<Integer> userids;
 	private List<String> usernames;
@@ -443,9 +445,8 @@ public class Server {
 		}
 	}
 	
-	private void clientExchange() throws IOException {
+	private void identifyClient() throws IOException {
 		
-		// identify the client
 		String clientCookie = inFromClient.readLine();
 		System.out.println("Client cookie: " + clientCookie);
 		userLine = findCookieLineNumber(clientCookie);
@@ -480,6 +481,9 @@ public class Server {
 			String username = usernames.get(userLine);
 			outToClient.writeBytes("Welcome back " + username + "!\n");
 		}
+	}
+	
+	private void clientServerExchange() throws IOException {
 		
 		// begin exchange with client
 		while(true){	
@@ -499,6 +503,7 @@ public class Server {
 				while(handleVendor() == false);
 			}
 			
+			// write out databases
 			Files.write(pathToDatabase, fileContent, StandardCharsets.UTF_8);
 			Files.write(pathToUserDatabase, userInfoDatabase, StandardCharsets.UTF_8);
 			System.out.println("Successfully saved databases");
@@ -522,12 +527,10 @@ public class Server {
 		else
 			return;
 		
-		while(true){
-			
+		while(true){		
 			myServer.waitForConnection();
-			
-			myServer.clientExchange();
-			
+			myServer.identifyClient();
+			myServer.clientServerExchange();
 		}
 	}
 }

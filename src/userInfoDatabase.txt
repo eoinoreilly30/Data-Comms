@@ -1,1 +1,2 @@
-userid=670:username=customer:usertype=customer
+userid=245:username=bob:usertype=vendor
+userid=257:username=customer:usertype=customer:milk:chips:water
