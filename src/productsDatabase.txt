@@ -1,0 +1,7 @@
+widgets:100:0.02
+chocolate:74:1.2
+water:45:1.00
+chips:72:1.25
+nuggets:0:5.5
+milk:0:1.5
+sugar:12:2.3
