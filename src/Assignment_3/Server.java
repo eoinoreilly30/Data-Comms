@@ -10,7 +10,6 @@ import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Server {
@@ -127,7 +126,7 @@ public class Server {
 				userids.add(Integer.parseInt(lineArray[0].split("=")[1]));
 				usernames.add(lineArray[1].split("=")[1]);
 				usertypes.add(lineArray[2].split("=")[1]);
-				purchases.add(new ArrayList());
+				purchases.add(new ArrayList<String>());
 				for(int j=3; j<lineArray.length; j++){
 					purchases.get(i).add(lineArray[j]);
 				}
@@ -136,10 +135,11 @@ public class Server {
 		}
 		catch (IndexOutOfBoundsException e) {
 			System.out.println("User Info database empty");
+			// add dummy data to avoid index out of bounds exceptions
 			userids.add(1000);
 			usernames.add("xxxxxx");
 			usertypes.add("xxxxxx");
-			purchases.add(new ArrayList());
+			purchases.add(new ArrayList<String>());
 		}
 		
 		return true;
@@ -512,7 +512,8 @@ public class Server {
 	}
 	
 	public static void main(String args[]) throws IOException {
-			
+		
+		// set up server
 		Server myServer = new Server(1245);
 		
 		// read in databases
