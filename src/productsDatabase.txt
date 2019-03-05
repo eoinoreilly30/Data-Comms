@@ -1,4 +1,3 @@
-widgets:100:0.02
 chocolate:74:1.2
 water:45:1.00
 chips:72:1.25
