@@ -30,10 +30,11 @@ public class MediaClient {
 		long statInterval = 1000; // 1s
 		long lastTime = System.currentTimeMillis();
 		int numberOfReceivedPackets = 0;
-		long[] delays = new long[100000];
+		int previousSequenceNo = 0;
+		long previousDelay = 0;
 		
 		// get response
-		while(currentSequenceNo < 100000) {
+		while(currentSequenceNo < 10000000) {
 			
 			//receive packet
 			packet = new DatagramPacket(buf, buf.length);
@@ -41,31 +42,41 @@ public class MediaClient {
 			
 			// record time packet was received at
 			long currentTime = System.currentTimeMillis();
+			
+			// record number of received packets over time interval
 			numberOfReceivedPackets++;
 			
 			DataPacket pk = convert(packet.getData());
 			currentSequenceNo = pk.seq;
 			
-			delays[numberOfReceivedPackets] = currentTime - pk.time;
+			// record delay
+			long delay = currentTime - pk.time;
 			
 			if((currentTime - lastTime) >= statInterval) {
+				
 				// throughput
 				System.out.println("Throughput: " + numberOfReceivedPackets + "pps");
 				
 				// loss
-				int loss = currentSequenceNo - numberOfReceivedPackets;
-				System.out.println("Loss: " + loss + "pps");
-				
+				int shouldHaveReceived = currentSequenceNo - previousSequenceNo;
+				int loss = shouldHaveReceived - numberOfReceivedPackets;
+				double percentageLoss = (loss * 100.0) / shouldHaveReceived;
+				System.out.println("Loss: " + loss + "pps, Percentage: " + percentageLoss + "%");
+				previousSequenceNo = currentSequenceNo;
+
 				// delay
-				System.out.println("Delay: " + delays[numberOfReceivedPackets] + "ms");
+				System.out.println("Delay: " + delay + "ms");
 				
 				// jitter
-				long jitter = delays[numberOfReceivedPackets] - delays[numberOfReceivedPackets-1];
-				System.out.println("Jitter: " + jitter + "ms");
+				long jitter = delay - previousDelay;
+				System.out.println("Jitter: " + jitter + "ms\n\n");
 				
 				lastTime = currentTime;
-				return;
+				numberOfReceivedPackets = 0;
 			}
+			
+			// update previous delay
+			previousDelay = delay;
 		}
 		
 		socket.close();

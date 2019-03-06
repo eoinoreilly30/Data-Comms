@@ -1,1 +1,2 @@
-userid=670:username=customer:usertype=customer
+userid=932:username=customer1:usertype=customer:milk:chocolate
+userid=563:username=vendor1:usertype=vendor

@@ -34,7 +34,7 @@ public class MediaServer {
 			InetAddress address = packet.getAddress();
 			int port = packet.getPort();
 			
-			while (seq < 100000) {
+			while (seq < 10000000) {
 				DataPacket pk = new DataPacket(++seq, data, System.currentTimeMillis());
 				buf = convert(pk);
 				packet = new DatagramPacket(buf, buf.length, address, port);
